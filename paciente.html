@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Paciente | FonoClínica</title>
+    <style>
+        :root {
+            --primary-color: #0077b6;
+            --secondary-color: #00b4d8;
+            --dark-color: #2b2d42;
+            --light-bg: #f4f7f6;
+            --success-color: #4caf50;
+            --chat-bg: #e5ddd5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Menu Lateral de Navegação */
+        .sidebar {
+            width: 260px;
+            background-color: var(--dark-color);
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .sidebar .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            text-align: center;
+            border-bottom: 1px solid #45475a;
+            padding-bottom: 15px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sidebar ul li a {
+            color: #cdd6f4;
+            text-decoration: none;
+            font-size: 16px;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .sidebar ul li a.active, .sidebar ul li a:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Conteúdo Principal */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Esquerda: Painel e Diário | Direita: Chat IA */
+            gap: 30px;
+        }
+
+        .welcome-header {
+            grid-column: 1 / -1;
+            margin-bottom: 10px;
+        }
+
+        .welcome-header h2 {
+            color: var(--primary-color);
+            font-size: 28px;
+        }
+
+        /* Cards Genéricos */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .card h3 {
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Agenda e Próxima Consulta */
+        .agenda-info {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .agenda-info .data {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* O Diário de Treino / Exercícios */
+        .diario-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .diario-item:last-child { border-bottom: none; }
+
+        .diario-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .diario-item label {
+            font-size: 16px;
+            cursor: pointer;
+            flex-grow: 1;
+        }
+
+        .btn-salvar {
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+
+        .btn-salvar:hover { background-color: #3d8b40; }
+
+        /* --- Interface do Chat da IA --- */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 140px);
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 15px;
+            background-color: #f0f2f5;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .message.user {
+            background-color: #d9fdd3;
+            align-self: flex-end;
+            border-top-right-radius: 0;
+        }
+
+        .message.ia {
+            background-color: #ffffff;
+            align-self: flex-start;
+            border-top-left-radius: 0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .chat-input-area {
+            padding: 15px;
+            background-color: #f0f2f5;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chat-input-area input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .chat-input-area button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .chat-input-area button:hover { background-color: #005f92; }
+
+        @media (max-width: 1024px) {
+            .main-content { grid-template-columns: 1fr; }
+            .chat-container { height: 500px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo">FonoClínica ✨</div>
+        <ul>
+            <li><a href="#" class="active">🏠 Meu Painel</a></li>
+            <li><a href="#">📅 Minhas Consultas</a></li>
+            <li><a href="#">📒 Diário de Treino</a></li>
+            <li><a href="#">🤖 Assistente IA</a></li>
+            <li style="margin-top: auto;"><a href="#" style="background-color: #e63946; color: white; text-align: center;">Sair</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="welcome-header">
+            <h2>Olá, Pedro Henrique! 👋</h2>
+            <p>Seu fonoaudiólogo responsável: <b>Dr. Alexandre Sousa</b></p>
+        </div>
+
+        <div>
+            <div class="card">
+                <h3>Sua Próxima Sessão</h3>
+                <div class="agenda-info">
+                    <div>
+                        <p style="margin: 0; font-size: 14px; opacity: 0.9;">Terapia de Motricidade Orofacial</p>
+                        <p style="margin: 5px 0 0 0; font-size: 18px; font-weight: 500;">Presencial - Sala 03</p>
+                    </div>
+                    <div class="data" style="text-align: right;">
+                        <div>Quinta-feira</div>
+                        <div style="font-size: 18px; opacity: 0.9;">14:30h</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📒 Meu Diário de Hoje <span style="font-size: 14px; color: var(--success-color); font-weight: normal;">● Vinculado ao tratamento</span></h3>
+                <p style="color: #666; font-size: 14px;">Marque os exercícios que você conseguiu realizar em casa hoje para o Dr. Alexandre acompanhar:</p>
+                
+                <div class="diario-item">
+                    <input type="checkbox" id="ex1">
+                    <label Piscar para o "ex1">Exercício 1: Instalação do fonema /r/ (10 repetições com espelho)</label>
+                </div>
+                <div class="diario-item">
+                    <input type="checkbox" id="ex2">
+                    <label for="ex2">Exercício 2: Fortalecimento de bochechas (Soprar a caneta 5 vezes)</label>
+                </div>
+                <div class="diario-item">
+                    <input type="checkbox" id="ex3">
+                    <label for="ex3">Exercício 3: Massagem circular na musculatura mastigatória</label>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <label style="display:block; margin-bottom: 8px; font-weight: 500;">Como você se sentiu hoje?</label>
+                    <textarea placeholder="Ex: Senti um pouco de cansaço na língua no segundo exercício..." style="width: 100%; height: 80px; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; resize: none;"></textarea>
+                </div>
+
+                <button class="btn-salvar" onclick="alert('Diário salvo! Seu fonoaudiólogo já recebeu.')">Enviar Registro do Dia</button>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-header">
+                🤖 FonoBot - Assistente de IA
+            </div>
+            <div class="chat-messages" id="chatBox">
+                <div class="message ia">
+                    Olá, Pedro! Sou o assistente inteligente da clínica. Posso te ajudar com dúvidas sobre seus exercícios ou termos de fonoaudiologia. O que gostaria de saber hoje?
+                </div>
+                <div class="message user">
+                    Para que serve o exercício de estalar a língua?
+                </div>
+                <div class="message ia">
+                    O estalo de língua é ótimo! Ele ajuda a fortalecer a musculatura da língua e melhora a mobilidade dela. Isso ajuda bastante na deglutição correta dos alimentos e também na articulação de alguns sons da fala. Lembre-se de fazer no ritmo que o Dr. Alexandre recomendou! 😉
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="campoMensagem" placeholder="Digite sua dúvida sobre o tratamento...">
+                <button onclick="enviarMensagemMock()">Enviar</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Função simples para simular o envio de mensagens no chat visualmente
+        function enviarMensagemMock() {
+            const input = document.getElementById('campoMensagem');
+            const chatBox = document.getElementById('chatBox');
+            if(input.value.trim() === '') return;
+
+            // Mensagem do usuário
+            chatBox.innerHTML += `<div class="message user">${input.value}</div>`;
+            
+            // Resposta simulada (No sistema real, aqui chamaria a API que criamos no passo anterior)
+            setTimeout(() => {
+                chatBox.innerHTML += `<div class="message ia">Recebi sua dúvida! Vou analisar isso junto ao seu plano de tratamento. (Simulação de resposta conectada ao servidor)</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 1000);
+
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
