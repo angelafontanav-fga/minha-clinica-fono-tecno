@@ -51,7 +51,6 @@ app.post('/api/cadastro-paciente', async (req, res) => {
 
 // --- ROTA 2: SALVAR O DIÁRIO DO PACIENTE (Área do Paciente) ---
 app.post('/api/diario', async (req, res) => {
-    // No mundo real, o id_paciente viria do Token de Login (JWT), aqui pegamos do corpo para simplificar
     const { id_paciente, exercicios_concluidos, nivel_dificuldade, observacoes_progresso } = req.body;
 
     try {
@@ -61,10 +60,36 @@ app.post('/api/diario', async (req, res) => {
             [id_paciente, exercicios_concluidos, nivel_dificuldade, observacoes_progresso]
         );
 
-        res.status(201).json({ mensagem: 'Diário atualizado! Seu fonoaudiólogo já pode visualizar.' });
+        res.status(201).json({ mensagem: 'Diário updated! Seu fonoaudiólogo já pode visualizar.' });
     } catch (erro) {
         console.error(erro);
         res.status(500).json({ erro: 'Erro ao salvar o diário.' });
+    }
+});
+
+// ==================== ROTA PARA SALVAR UM AGENDAMENTO DE CONSULTA ====================
+app.post('/api/agendamentos', async (req, res) => {
+    const id_paciente = 1; 
+    const id_profissional = 1; // Dr. Alexandre
+    const { data_consulta, horario, observacoes } = req.body;
+
+    const data_hora_agendamento = `${data_consulta} ${horario}:00`;
+    const status_inicial = 'pendente'; 
+
+    const query = `
+        INSERT INTO consultas_agenda (id_paciente, id_profissional, data_hora, status, observacoes) 
+        VALUES ($1, $2, $3, $4, $5)
+    `;
+
+    try {
+        await pool.query(query, [id_paciente, id_profissional, data_hora_agendamento, status_inicial, observacoes]);
+        
+        return res.status(201).json({ 
+            message: "Solicitação de agendamento enviada com sucesso!"
+        });
+    } catch (erro) {
+        console.error("Erro ao salvar agendamento no banco:", erro);
+        return res.status(500).json({ error: "Erro interno ao processar o agendamento." });
     }
 });
 
