@@ -262,6 +262,77 @@
 
                 <button type="submit" class="btn-salvar">Salvar Prontuário</button>
             </form>
+            <div class="card" style="margin-top: 30px; padding: 0; box-shadow: none; border-top: 2px dashed #cbd5e1; border-radius: 0;">
+                <h3 style="margin-top: 20px; color: var(--primary-color);">📊 Exames e Triagens Fonoaudiológicas</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    
+                    <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                        <h4 style="color: var(--dark-color); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                            👂 Avaliação Audiológica
+                        </h4>
+                        
+                        <div class="campo-grupo" style="margin-bottom: 10px;">
+                            <label style="font-size: 14px;">Limiares Auditivos (OD / OE)</label>
+                            <input type="text" placeholder="Ex: OD: 15 dB | OE: 20 dB (Limiares dentro da normalidade)">
+                        </div>
+
+                        <div class="campo-grupo" style="margin-bottom: 0;">
+                            <label style="font-size: 14px;">Imitanciometria / Curva Timpanométrica</label>
+                            <input type="text" placeholder="Ex: Curva Tipo A em ambas as orelhas, reflexos presentes.">
+                        </div>
+                    </div>
+
+                    <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                        <h4 style="color: var(--dark-color); margin-bottom: 12px;">
+                            👶 Triagens e Protocolos Iniciais
+                        </h4>
+                        
+                        <div style="display: flex; gap: 15px; margin-bottom: 10px;">
+                            <div style="flex: 1;">
+                                <label style="font-size: 14px; font-weight: 600; display: block; margin-bottom: 5px;">Teste da Orelhinha</label>
+                                <select style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 14px;">
+                                    <option value="">-- Selecione --</option>
+                                    <option value="passou">PRESENTE / PASSOU</option>
+                                    <option value="falhou">AUSENTE / FALHOU (Encaminhar para Reoferecimento)</option>
+                                    <option value="nao-realizado">Não Realizado</option>
+                                </select>
+                            </div>
+                            <div style="flex: 1;">
+                                <label style="font-size: 14px; font-weight: 600; display: block; margin-bottom: 5px;">Teste da Linguinha</label>
+                                <select style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 14px;">
+                                    <option value="">-- Selecione --</option>
+                                    <option value="normal">Frenulo Normal (Sem alteração)</option>
+                                    <option value="alterado">Frênulo Alterado (Anquiloglossia)</option>
+                                    <option value="duvidoso">Duvidoso / Reavaliar</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="campo-grupo" style="margin-bottom: 0;">
+                            <label style="font-size: 14px;">Observações dos Testes</label>
+                            <input type="text" placeholder="Ex: Protocolo de Martinelli score 2, sem restrição de mobilidade.">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="campo-grupo" style="margin-top: 20px;">
+                    <label style="color: var(--dark-color);">Anexar Laudos Externos / Exames (PDF, Imagens)</label>
+                    <input type="file" multiple style="border: 2px dashed #cbd5e1; padding: 20px; background: #fff; text-align: center; cursor: pointer;">
+                </div>
+            </div>
+            ```
+
+---
+
+### 🔥 O impacto dessa mudança no sistema:
+* **Prontuário Completo:** Agora o fonoaudiólogo tem, na mesma tela, as observações do dia, as queixas, os resultados de exames de audição e as triagens básicas (como o teste de frênulo lingual).
+* **Upload de Arquivos:** Adicionamos o campo `input type="file"`. Isso permite que o profissional tire uma foto do exame que o paciente trouxe impresso e anexe direto na ficha digital dele dentro do banco de dados.
+
+Adicionando esse trecho, o painel clínico fica robusto e perfeitamente adaptado às necessidades reais de um consultório de fonoaudiologia!
+
+Qual o próximo passo do nosso projeto? Quer ajustar os botões para navegar entre todas as 3 telas agora ou quer começar a detalhar uma tela para o **Administrador da Clínica** (financeiro, faturamento, controle de convênios)?
         </div>
 
     </div>
