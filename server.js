@@ -129,8 +129,3 @@ app.get('/api/profissional/agendamentos', async (req, res) => {
 app.listen(3000, () => {
     console.log('Servidor da FonoClínica rodando na porta 3000 🚀');
 });
-
-// Iniciando o servidor na porta 3000
-app.listen(3000, () => {
-    console.log('Servidor da FonoClínica rodando na porta 3000 🚀');
-});
