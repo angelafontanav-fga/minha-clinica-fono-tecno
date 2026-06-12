@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const cors = require('cors');
 
 const app = express();
+app.use(express.static(__dirname));
 app.use(express.json());
 app.use(cors()); 
 
@@ -12,7 +13,7 @@ const pool = new Pool({
     user: 'postgres',          
     host: 'localhost',
     database: 'fonoclinica_db', 
-    password: '',               // Deixe vazio ou coloque sua senha se tiver criado uma
+    password: 'Fonotec@74',               // Deixe vazio ou coloque sua senha se tiver criado uma
     port: 5432,
 });
 
